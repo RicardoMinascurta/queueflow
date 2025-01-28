@@ -113,7 +113,7 @@ export default function SettingsPage() {
     <div className="p-8">
       <div className="flex items-center gap-3 mb-8">
         <Settings size={32} className="text-blue-600" />
-        <h1 className="text-3xl font-bold text-blue-900">Configurações</h1>
+        <h1 className="text-3xl font-bold text-blue-900">Definições</h1>
       </div>
 
       <div className="space-y-6 max-w-2xl">
