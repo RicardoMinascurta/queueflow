@@ -6,7 +6,6 @@ export async function middleware(request: NextRequest) {
   try {
     const res = NextResponse.next()
     const supabase = createMiddlewareClient({ req: request, res })
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin
 
     // Rotas públicas que não precisam de autenticação
     const publicRoutes = ['/', '/auth/signin', '/auth/callback']
@@ -21,9 +20,9 @@ export async function middleware(request: NextRequest) {
     if (error) {
       console.error('Erro ao verificar sessão:', error.message)
       if (!isPublicRoute) {
-        const url = new URL('/auth/signin', siteUrl)
-        url.searchParams.set('redirectTo', request.nextUrl.pathname)
-        return NextResponse.redirect(url)
+        const redirectUrl = new URL('/auth/signin', request.url)
+        redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname)
+        return NextResponse.redirect(redirectUrl)
       }
       return res
     }
@@ -31,24 +30,21 @@ export async function middleware(request: NextRequest) {
     // Se não há sessão e a rota não é pública, redireciona para login
     if (!session && !isPublicRoute) {
       console.log('Usuário não autenticado, redirecionando para login...')
-      const url = new URL('/auth/signin', siteUrl)
-      url.searchParams.set('redirectTo', request.nextUrl.pathname)
-      return NextResponse.redirect(url)
+      const redirectUrl = new URL('/auth/signin', request.url)
+      redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname)
+      return NextResponse.redirect(redirectUrl)
     }
 
     // Se há sessão e está tentando acessar rotas de auth, redireciona para dashboard
     if (session && isPublicRoute && request.nextUrl.pathname !== '/') {
       console.log('Usuário já autenticado, redirecionando para dashboard...')
-      return NextResponse.redirect(new URL('/dashboard', siteUrl))
+      return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 
     return res
   } catch (error) {
     console.error('Erro no middleware:', error)
-    if (!request.nextUrl.pathname.startsWith('/auth/')) {
-      return NextResponse.redirect(new URL('/auth/signin', siteUrl))
-    }
-    return NextResponse.next()
+    return NextResponse.redirect(new URL('/auth/signin', request.url))
   }
 }
 
