@@ -1,25 +1,18 @@
 "use client";
 
 import React, { Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
 function SignInContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo') || '/dashboard';
 
   const handleSignIn = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'https://queueflow.vercel.app/auth/callback',
-        queryParams: {
-          redirectTo,
-          access_type: 'offline',
-          prompt: 'consent',
-        }
-      },
+        redirectTo: '/auth/callback'
+      }
     });
 
     if (error) {
