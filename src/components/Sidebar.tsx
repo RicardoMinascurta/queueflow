@@ -29,7 +29,7 @@ export default function Sidebar() {
   const menuItems = [
     {
       path: '/dashboard',
-      label: 'Dashboard',
+      label: 'Controlo',
       icon: <LayoutDashboard size={20} />
     },
     {
@@ -39,7 +39,7 @@ export default function Sidebar() {
     },
     {
       path: '/settings',
-      label: 'Configurações',
+      label: 'Definições',
       icon: <Settings size={20} />
     }
   ];
