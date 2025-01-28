@@ -7,10 +7,11 @@ export async function GET(request: Request) {
     const requestUrl = new URL(request.url)
     const code = requestUrl.searchParams.get('code')
     const redirectTo = requestUrl.searchParams.get('redirectTo') || '/dashboard'
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin
     
     if (!code) {
       console.error('Código de autenticação não encontrado')
-      return NextResponse.redirect(new URL('/auth/signin', request.url))
+      return NextResponse.redirect(new URL('/auth/signin', siteUrl))
     }
 
     const cookieStore = cookies()
@@ -21,7 +22,7 @@ export async function GET(request: Request) {
     
     if (error) {
       console.error('Erro ao trocar código por sessão:', error.message)
-      return NextResponse.redirect(new URL('/auth/signin', request.url))
+      return NextResponse.redirect(new URL('/auth/signin', siteUrl))
     }
 
     // Se a sessão foi criada com sucesso, criar organização
@@ -65,9 +66,9 @@ export async function GET(request: Request) {
     console.log('Sessão criada com sucesso:', data.session?.user?.email)
     console.log('Redirecionando para:', redirectTo)
 
-    return NextResponse.redirect(new URL(redirectTo, request.url))
+    return NextResponse.redirect(new URL(redirectTo, siteUrl))
   } catch (error) {
     console.error('Erro no callback:', error)
-    return NextResponse.redirect(new URL('/auth/signin', request.url))
+    return NextResponse.redirect(new URL('/auth/signin', siteUrl))
   }
 } 
