@@ -29,7 +29,7 @@ export default function Sidebar() {
   const menuItems = [
     {
       path: '/dashboard',
-      label: 'Controlo',
+      label: 'Dashboard',
       icon: <LayoutDashboard size={20} />
     },
     {

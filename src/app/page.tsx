@@ -4,7 +4,7 @@ export default function Home() {
       <h1 className="text-4xl font-bold">QueueFlow</h1>
       <div className="mt-8 flex gap-4">
         <a href="/dashboard" className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
-          Painel de Controle
+          Painel de Controlo
         </a>
         <a href="/display" className="rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600">
           Monitor de Senhas
