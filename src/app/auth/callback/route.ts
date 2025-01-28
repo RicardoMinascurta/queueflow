@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     
     if (!code) {
       console.error('Código de autenticação não encontrado')
-      return NextResponse.redirect(requestUrl.origin + '/auth/signin')
+      return NextResponse.redirect('/auth/signin')
     }
 
     const cookieStore = cookies()
@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     
     if (error) {
       console.error('Erro ao trocar código por sessão:', error.message)
-      return NextResponse.redirect(requestUrl.origin + '/auth/signin')
+      return NextResponse.redirect('/auth/signin')
     }
 
     // Se a sessão foi criada com sucesso, criar organização
@@ -65,10 +65,9 @@ export async function GET(request: Request) {
     console.log('Sessão criada com sucesso:', data.session?.user?.email)
     console.log('Redirecionando para:', redirectTo)
 
-    return NextResponse.redirect(requestUrl.origin + redirectTo)
+    return NextResponse.redirect(redirectTo)
   } catch (error) {
     console.error('Erro no callback:', error)
-    const url = new URL(request.url)
-    return NextResponse.redirect(url.origin + '/auth/signin')
+    return NextResponse.redirect('/auth/signin')
   }
 } 
