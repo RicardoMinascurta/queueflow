@@ -10,12 +10,15 @@ function SignInContent() {
   const redirectTo = searchParams.get('redirectTo') || '/dashboard';
 
   const handleSignIn = async () => {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
-    
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${siteUrl}/auth/callback?redirectTo=${redirectTo}`,
+        redirectTo: 'https://queueflow.vercel.app/auth/callback',
+        queryParams: {
+          redirectTo,
+          access_type: 'offline',
+          prompt: 'consent',
+        }
       },
     });
 
