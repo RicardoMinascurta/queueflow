@@ -114,12 +114,12 @@ export default function Display() {
       {/* Conteúdo Principal */}
       <div className="h-screen flex flex-col">
         {/* Container do Número e Guichê com margens proporcionais */}
-        <div className="flex-1 flex flex-col justify-center items-center gap-8">
+        <div className="flex-1 flex flex-col justify-center items-center">
           {/* Senha */}
-          <div className="text-center">
+          <div className="text-center mb-[5vh]">
             <h2 className={`font-bold tracking-wider text-black/90 ${
-              isFullscreen ? 'text-[20vh]' : 'text-[15vh]'
-            } leading-none`}>
+              isFullscreen ? 'text-[15vw]' : 'text-[10vw]'
+            } leading-tight`}>
               SENHA: {lastCall ? String(lastCall.number).padStart(2, '0') : '00'}
             </h2>
           </div>
@@ -127,8 +127,8 @@ export default function Display() {
           {/* Guichê */}
           <div className="text-center">
             <h3 className={`font-bold text-black/90 ${
-              isFullscreen ? 'text-[15vh]' : 'text-[10vh]'
-            } leading-none`}>
+              isFullscreen ? 'text-[10vw]' : 'text-[7vw]'
+            } leading-tight`}>
               {lastCall ? lastCall.counter_name : 'Gabinete X'}
             </h3>
           </div>

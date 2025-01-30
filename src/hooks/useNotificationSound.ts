@@ -3,7 +3,14 @@
 import { useState, useEffect } from 'react';
 
 export function useNotificationSound() {
-  const [audio] = useState(() => typeof window !== 'undefined' ? new Audio('/sound.mp3') : null);
+  const [audio] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const audio = new Audio('/sound.mp3');
+      audio.volume = 1.0; // Volume máximo
+      return audio;
+    }
+    return null;
+  });
   const [canPlay, setCanPlay] = useState(false);
 
   useEffect(() => {
@@ -29,8 +36,14 @@ export function useNotificationSound() {
     if (!audio || !canPlay) return;
     
     try {
-      audio.currentTime = 0;
-      await audio.play();
+      // Toca o som 3 vezes em sequência
+      for (let i = 0; i < 3; i++) {
+        await new Promise((resolve) => {
+          audio.currentTime = 0;
+          audio.play();
+          audio.onended = resolve;
+        });
+      }
     } catch (error) {
       console.error('[useNotificationSound] Erro ao tocar áudio:', error);
     }
