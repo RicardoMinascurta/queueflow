@@ -36,14 +36,9 @@ export function useNotificationSound() {
     if (!audio || !canPlay) return;
     
     try {
-      // Toca o som 3 vezes em sequência
-      for (let i = 0; i < 3; i++) {
-        await new Promise((resolve) => {
-          audio.currentTime = 0;
-          audio.play();
-          audio.onended = resolve;
-        });
-      }
+      // Toca o som apenas uma vez
+      audio.currentTime = 0;
+      await audio.play();
     } catch (error) {
       console.error('[useNotificationSound] Erro ao tocar áudio:', error);
     }
