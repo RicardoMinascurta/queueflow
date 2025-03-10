@@ -1,56 +1,48 @@
-import { useCallback, useRef, useEffect } from 'react';
+"use client";
+
+import { useState, useEffect } from 'react';
 
 export function useNotificationSound() {
-  const audioRefs = useRef<HTMLAudioElement[]>([]);
-
-  // Inicializar os elementos de áudio
-  useEffect(() => {
-    // Criar 20 elementos de áudio para um som mais alto
-    audioRefs.current = Array.from({ length: 20 }, () => {
+  const [audio] = useState<HTMLAudioElement | null>(() => {
+    if (typeof window !== 'undefined') {
       const audio = new Audio('/sound.mp3');
-      audio.volume = 1.0;
-      audio.preload = 'auto';
+      audio.volume = 1.0; // Volume máximo
       return audio;
-    });
+    }
+    return null;
+  });
+  const [canPlay, setCanPlay] = useState(false);
 
-    // Cleanup
+  useEffect(() => {
+    const handleInteraction = () => {
+      setCanPlay(true);
+      document.removeEventListener('click', handleInteraction);
+      document.removeEventListener('keydown', handleInteraction);
+      document.removeEventListener('touchstart', handleInteraction);
+    };
+
+    document.addEventListener('click', handleInteraction);
+    document.addEventListener('keydown', handleInteraction);
+    document.addEventListener('touchstart', handleInteraction);
+
     return () => {
-      audioRefs.current.forEach(audio => {
-        audio.pause();
-        audio.src = '';
-      });
-      audioRefs.current = [];
+      document.removeEventListener('click', handleInteraction);
+      document.removeEventListener('keydown', handleInteraction);
+      document.removeEventListener('touchstart', handleInteraction);
     };
   }, []);
 
-  const playSound = useCallback(async () => {
+  const playSound = async () => {
+    if (!audio || !canPlay) return;
+    
     try {
-      if (audioRefs.current.length === 0) {
-        console.log('Áudio não inicializado');
-        return;
-      }
-
-      // Parar qualquer reprodução anterior
-      audioRefs.current.forEach(audio => {
-        audio.pause();
-        audio.currentTime = 0;
-      });
-
-      // Tocar todos os áudios simultaneamente
-      const playPromises = audioRefs.current.map(audio => {
-        try {
-          return audio.play().catch(() => {});
-        } catch {
-          return Promise.resolve();
-        }
-      });
-
-      await Promise.all(playPromises);
-
+      // Toca o som apenas uma vez
+      audio.currentTime = 0;
+      await audio.play();
     } catch (error) {
-      console.error('Erro ao tocar som:', error);
+      console.error('[useNotificationSound] Erro ao tocar áudio:', error);
     }
-  }, []);
+  };
 
   return playSound;
 } 
